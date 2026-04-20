@@ -43,3 +43,24 @@ function placeMines(row, col){
         minesPlaced++;
     }
 }
+
+
+function calculateNumber(){
+    for (let i = 0; i < BoardSize; i++){
+        for (let j = 0; j < BoardSize; j++){
+            if (board[i][j].isMine) continue;
+
+            let count = 0;
+
+            for (let di = -1; di <= 1; di++){
+                for (let dj = -1; dj <= 1; dj++){
+                    const ni = i + di;
+                    const nj = j + dj;
+                    if (ni >= 0 && ni < BoardSize && nj >= 0 && nj < BoardSize && board[i][j].isMine){
+                        count++;
+                    }
+                }
+            }
+        }
+    }
+}
