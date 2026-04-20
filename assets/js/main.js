@@ -1,4 +1,4 @@
-const rows = 10;
+const boardsize = 10;
 const cols = 10;
 const mines=15;
 
@@ -13,3 +13,8 @@ const flagsCountSpan = document.getElementById('flagsCount');
 const statusDiv = document.getElementById('status');
 const restart = document.getElementById('restart');
 
+function initBoard() {
+    board = Array(boardsize).fill().map(() => Array(boardsize).fill().map(()=> {
+
+    }));
+}
