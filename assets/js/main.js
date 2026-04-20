@@ -29,3 +29,17 @@ GameStatus.textContent = 'Игра началась';
 
 updateMineCounter();
 renderBoard();
+
+function placeMines(row, col){
+    let minesPlaced = 0;
+
+    while (minesPlaced < Mines){
+        const row = Math.floor(Math.random()*BoardSize);
+        const col = Math.floor(Math.random()*BoardSize);
+    }
+
+    if(!board[row][col].isMine && !(row == firstRow && col == firstCol)){
+        board[row][col] = true;
+        minesPlaced++;
+    }
+}
