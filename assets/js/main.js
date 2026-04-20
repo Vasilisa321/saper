@@ -1,20 +1,31 @@
-const boardsize = 10;
-const cols = 10;
-const mines=15;
+const BoardSize = 10;
+const Mines=15;
 
-let boardData = [];
-let currentMinesCount = mines;
-let flagsCount = 0;
+let board = [];
+let firstMove = 0;
 let gameActive = true;
+let cellsRevealed = 0;
 
-const boardContainer = document.getElementById('board');
-const mineCountSpan =document.getElementById('mineCount');
-const flagsCountSpan = document.getElementById('flagsCount');
-const statusDiv = document.getElementById('status');
+const GameBoard = document.getElementById('GameBoard');
+const mineCount =document.getElementById('mineCount');
+const resetButton = document.getElementById('resetButton');
+const GameStatus = document.getElementById('GameStatus');
 const restart = document.getElementById('restart');
 
 function initBoard() {
-    board = Array(boardsize).fill().map(() => Array(boardsize).fill().map(()=> {
-
+    board = Array(BoardSize).fill().map(() => Array(BoardSize).fill().map(()=> {
+        isMine = true;
+        isRevealed = true;
+        isFlagged = true;
+        neighborMines = 0;
+        element: null
     }));
 }
+
+cellsRevealed = 0;
+gameActive = true;
+firstMove = true;
+GameStatus.textContent = 'Игра началась';
+
+updateMineCounter();
+renderBoard();
