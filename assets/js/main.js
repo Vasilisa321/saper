@@ -38,6 +38,27 @@ function placeMines(firstRow, firstCol) {
     }
 }
 
+function handleCellClick(row, col, event){
+    if (!gameActive) return;
+
+    const cell = board[row][col];
+
+    if (event.type === 'click') {
+        if (cell.isRevealed || cell.isFlagged) return;
+
+        if (firstMove) {
+            placeMines(row, col);
+            calculateNumbers();
+            firstMove = false;
+        }
+
+        if (cell.isMine){
+            gameLose();
+            return;
+        }
+    }
+}
+
 
 
 function renderBoard() {
@@ -54,9 +75,6 @@ if (startButton) {
     startButton.addEventListener('click', startNewGame);
 }
 
-if (resetButton) {
-    resetButton.addEventListener('click', startNewGame);
-}
 
 initBoard();
 renderBoard();
