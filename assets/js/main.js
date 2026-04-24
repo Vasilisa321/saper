@@ -141,6 +141,7 @@ function gameWin() {
     setTimeout(() => alert('Победа.'))
 }
 
+
 function gameLose() {
     gamActive = false;
 
