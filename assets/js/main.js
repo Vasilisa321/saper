@@ -67,6 +67,15 @@ function handleCellClick(row, col, event){
 
         checkWin();
     }
+
+    else if (event.type === 'contextMenu') {
+        event.preventDefault();
+
+        if (cell.isRevealed) return;
+
+        cell.isFlagged = !cell.isFlagged;
+        updateCellVisual(row, col);
+    }
 }
 
 
