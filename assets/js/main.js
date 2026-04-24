@@ -113,6 +113,22 @@ function gameWin() {
     setTimeout(() => alert('Победа.'))
 }
 
+function gameLose() {
+    gamActive = false;
+
+    for(let i = 0; i < BoardSize; i++){
+        for (let j = 0; j < BoardSize; j++) {
+            const cell = board[i][j];
+            if (cell.isMine && !cell.isRevealed){
+                cell.isRevealed = true;
+                updateCellVisual++;
+            }
+        }
+    }
+
+    setTimeout(() => alert('Вы проиграли.'))
+}
+
 function startNewGame() {
     initBoard();
     renderBoard();
