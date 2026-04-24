@@ -97,6 +97,14 @@ function renderBoard() {
     }
 }
 
+function checkWin() {
+    const safeCells = BoardSize * BoardSize - TOTAL_MINES;
+
+    if(cellsRevealed === safeCells) {
+        gameWin();
+    }
+}
+
 function gameWin() {
     gameActive = false;
 
