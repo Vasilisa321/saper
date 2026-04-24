@@ -56,6 +56,16 @@ function handleCellClick(row, col, event){
             gameLose();
             return;
         }
+
+        if (cell.neighborMines === 0){
+            revealEmptyCells(row, col);
+        } else {
+            cell.isRevealed = true;
+            cellsRevealed++;
+            updateCellVisual(row, col);
+        }
+
+        checkWin();
     }
 }
 
