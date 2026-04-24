@@ -78,11 +78,39 @@ function handleCellClick(row, col, event){
     }
 }
 
-
-
 function renderBoard() {
     if (!gameBoard) return;
     gameBoard.innerHTML = '';
+
+    gameBoard.style.gridTemplateColumns = `repeat(${BoardSize}, 40px)`;
+
+    for (let i = 0; i < BoardSize; i++) {
+        for (let j = 0; j < BoardSize; j++) {
+            const cell = board[i][j];
+            const cellDiv = document.createElement('div');
+            cellDiv.className = 'cell';
+
+            cell.element = cellDiv;
+
+            cellDiv.addElementListener('click',);
+        }
+    }
+}
+
+function gameWin() {
+    gameActive = false;
+
+    for (let i = 0; i < BoardSize; i++) {
+        for (let j = 0; j < BoardSize; j++) {
+            const cell = board[i][j];
+            if (cell.isMine && !cell.isRevealed){
+                cell.isFlagged = true;
+                updateCellVisual(i,j);
+            }
+        }
+    }
+
+    setTimeout(() => alert('Победа.'))
 }
 
 function startNewGame() {
