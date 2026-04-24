@@ -97,6 +97,26 @@ function renderBoard() {
     }
 }
 
+function updateCellVisual(row, col) {
+    const cell = board[row][col];
+    const cellDiv = cell.element;
+
+    if (!cellDiv) return;
+
+    cellDiv.classList.add('revealed');
+    cellDiv.classList.remove('flagged');
+
+    if (cell.isMine){
+        cellDiv.classList.add('Mine-revealed');
+        cellDiv.textContent ='';
+    } else if (cell.neighborMines > 0) {
+        cellDiv.textContent = cell.neighborMines;
+        cellDiv.setAttribute('data-value', cell.neighborMines);
+    } else {
+        cellDiv.textContent = '';
+    }
+}
+
 function checkWin() {
     const safeCells = BoardSize * BoardSize - TOTAL_MINES;
 
