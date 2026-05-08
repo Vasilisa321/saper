@@ -95,22 +95,35 @@ function handleCellClick(row, col, event) {
 
 function renderBoard() {
     if (!gameBoard) return;
-    gameBoard.innerHTML = '';
 
+    gameBoard.innerHTML = '';
     gameBoard.style.gridTemplateColumns = `repeat(${BoardSize}, 40px)`;
+    gameBoard.style.gridTemplateRows = `repeat(${BoardSize}, 40px)`;
 
     for (let i = 0; i < BoardSize; i++) {
         for (let j = 0; j < BoardSize; j++) {
             const cell = board[i][j];
             const cellDiv = document.createElement('div');
+
             cellDiv.className = 'cell';
+            cellDiv.dataset.row = i;
+            cellDiv.dataset.col = j;
 
             cell.element = cellDiv;
 
-            cellDiv.addElementListener('click',);
+            cellDiv.addEventListener('click', () => handleCellClick(i, j, { type: 'click' }));
+            cellDiv.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                handleCellClick(i, j, e);
+            });
+
+            gameBoard.appendChild(cellDiv);
+
+            updateCellVisual(i, j);
         }
     }
 }
+
 
 function revealEmptyCells(row, col) {
     const stack = [[row, col]];
