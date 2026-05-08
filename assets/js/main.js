@@ -38,7 +38,28 @@ function placeMines(firstRow, firstCol) {
     }
 }
 
-function handleCellClick(row, col, event){
+
+function calculateNumbers() {
+    for (let i = 0; i < BoardSize; i++) {
+        for (let j = 0; j < BoardSize; j++) {
+            if (board[i][j].isMine) continue;
+
+            let count = 0;
+            for (let x = -1; x <= 1; x++) {
+                for (let y = -1; y <= 1; y++) {
+                    const row = i + x;
+                    const col = j + y;
+                    if (row >= 0 && row < BoardSize && col >= 0 && col < BoardSize) {
+                        if (board[row][col].isMine) count++;
+                    }
+                }
+            }
+            board[i][j].neighborMines = count;
+        }
+    }
+}
+
+function handleCellClick(row, col, event) {
     if (!gameActive) return;
 
     const cell = board[row][col];
@@ -52,27 +73,22 @@ function handleCellClick(row, col, event){
             firstMove = false;
         }
 
-        if (cell.isMine){
+        if (cell.isMine) {
             gameLose();
             return;
         }
 
-        if (cell.neighborMines === 0){
+        if (cell.neighborMines === 0) {
             revealEmptyCells(row, col);
         } else {
             cell.isRevealed = true;
             cellsRevealed++;
             updateCellVisual(row, col);
         }
-
         checkWin();
-    }
-
-    else if (event.type === 'contextMenu') {
+    } else if (event.type === 'contextmenu') {
         event.preventDefault();
-
         if (cell.isRevealed) return;
-
         cell.isFlagged = !cell.isFlagged;
         updateCellVisual(row, col);
     }
@@ -107,7 +123,7 @@ function updateCellVisual(row, col) {
     cellDiv.classList.remove('flagged');
 
     if (cell.isMine){
-        cellDiv.classList.add('Mine-revealed');
+        cellDiv.classList.add('mine-revealed');
         cellDiv.textContent ='';
     } else if (cell.neighborMines > 0) {
         cellDiv.textContent = cell.neighborMines;
@@ -143,7 +159,7 @@ function gameWin() {
 
 
 function gameLose() {
-    gamActive = false;
+    gameActive = false;
 
     for(let i = 0; i < BoardSize; i++){
         for (let j = 0; j < BoardSize; j++) {
