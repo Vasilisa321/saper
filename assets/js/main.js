@@ -173,14 +173,14 @@ function gameWin() {
     for (let i = 0; i < BoardSize; i++) {
         for (let j = 0; j < BoardSize; j++) {
             const cell = board[i][j];
-            if (cell.isMine && !cell.isRevealed){
+            if (cell.isMine && !cell.isRevealed) {
                 cell.isFlagged = true;
-                updateCellVisual(i,j);
+                updateCellVisual(i, j);
             }
         }
     }
 
-    setTimeout(() => alert('Победа.'))
+    setTimeout(() => alert('Победа!'), 100);
 }
 
 
@@ -207,6 +207,9 @@ function startNewGame() {
 
 if (startButton) {
     startButton.addEventListener('click', startNewGame);
+}
+if (resetButton) {
+    resetButton.addEventListener('click', startNewGame);
 }
 
 
