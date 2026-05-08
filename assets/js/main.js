@@ -38,7 +38,6 @@ function placeMines(firstRow, firstCol) {
     }
 }
 
-
 function calculateNumbers() {
     for (let i = 0; i < BoardSize; i++) {
         for (let j = 0; j < BoardSize; j++) {
@@ -113,6 +112,28 @@ function renderBoard() {
     }
 }
 
+function revealEmptyCells(row, col) {
+    const stack = [[row, col]];
+    while (stack.length > 0) {
+        const [r, c] = stack.pop();
+        if (r < 0 || r >= BoardSize || c < 0 || c >= BoardSize) continue;
+        const cell = board[r][c];
+        if (cell.isRevealed || cell.isFlagged || cell.isMine) continue;
+
+        cell.isRevealed = true;
+        cellsRevealed++;
+        updateCellVisual(r, c);
+
+        if (cell.neighborMines === 0) {
+            for (let x = -1; x <= 1; x++) {
+                for (let y = -1; y <= 1; y++) {
+                    stack.push([r + x, c + y]);
+                }
+            }
+        }
+    }
+}
+
 function updateCellVisual(row, col) {
     const cell = board[row][col];
     const cellDiv = cell.element;
@@ -161,17 +182,17 @@ function gameWin() {
 function gameLose() {
     gameActive = false;
 
-    for(let i = 0; i < BoardSize; i++){
+    for (let i = 0; i < BoardSize; i++) {
         for (let j = 0; j < BoardSize; j++) {
             const cell = board[i][j];
-            if (cell.isMine && !cell.isRevealed){
+            if (cell.isMine && !cell.isRevealed) {
                 cell.isRevealed = true;
-                updateCellVisual++;
+                updateCellVisual(i, j);
             }
         }
     }
 
-    setTimeout(() => alert('Вы проиграли.'))
+    setTimeout(() => alert('Вы проиграли!'), 100);
 }
 
 function startNewGame() {
