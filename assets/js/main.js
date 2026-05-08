@@ -140,17 +140,22 @@ function updateCellVisual(row, col) {
 
     if (!cellDiv) return;
 
-    cellDiv.classList.add('revealed');
-    cellDiv.classList.remove('flagged');
+    cellDiv.classList.toggle('revealed', cell.isRevealed);
+    cellDiv.classList.toggle('flagged', cell.isFlagged);
 
-    if (cell.isMine){
-        cellDiv.classList.add('mine-revealed');
-        cellDiv.textContent ='';
-    } else if (cell.neighborMines > 0) {
-        cellDiv.textContent = cell.neighborMines;
-        cellDiv.setAttribute('data-value', cell.neighborMines);
+    if (cell.isRevealed) {
+        cellDiv.classList.remove('flagged');
+        if (cell.isMine) {
+            cellDiv.classList.add('mine-revealed');
+            cellDiv.textContent = '';
+        } else if (cell.neighborMines > 0) {
+            cellDiv.textContent = cell.neighborMines;
+            cellDiv.setAttribute('data-value', cell.neighborMines);
+        } else {
+            cellDiv.textContent = '';
+        }
     } else {
-        cellDiv.textContent = '';
+        cellDiv.textContent = cell.isFlagged ? '🚩' : '';
     }
 }
 
