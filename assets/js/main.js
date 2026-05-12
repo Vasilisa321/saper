@@ -5,22 +5,30 @@ let board = [];
 let firstMove = true;
 let gameActive = true;
 let cellsRevealed = 0;
+let timerInterval;
+let seconds = 0;
 
 const gameBoard = document.getElementById('board');
 const resetButton = document.getElementById('restartButton');
 const startButton = document.getElementById('startButton');
 const gameStatus = document.getElementById('statusMessage');
+const mineCounter = document.getElementById('mineCounter');
+const timerDisplay = document.getElementById('timer');
 
 function initBoard() {
     board = Array(BoardSize).fill().map(() => Array(BoardSize).fill().map(() => ({
         isMine: false,
         isRevealed: false,
         isFlagged: false,
-        neighborMines: 0
+        neighborMines: 0,
+        element: null
     })));
     cellsRevealed = 0;
     gameActive = true;
     firstMove = true;
+    seconds = 0;
+    updateTimer();
+    updateMineCounter();
     if (gameStatus) gameStatus.textContent = 'Игра началась';
 }
 
