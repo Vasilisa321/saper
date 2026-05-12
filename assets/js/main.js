@@ -46,6 +46,12 @@ function placeMines(firstRow, firstCol) {
     }
 }
 
+function updateMineCounter() {
+    const flaggedMines = board.flat().filter(cell => cell.isFlagged).length;
+    const remainingMines = Mines - flaggedMines;
+    if (mineCounter) mineCounter.textContent = remainingMines;
+}
+
 function startTimer() {
     clearInterval(timerInterval);
     timerInterval = setInterval(() => {
