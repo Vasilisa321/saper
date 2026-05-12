@@ -150,12 +150,19 @@ function renderBoard() {
     }
 }
 
-
 function revealEmptyCells(row, col) {
     const stack = [[row, col]];
+    const visited = new Set();
+
     while (stack.length > 0) {
         const [r, c] = stack.pop();
+        const key = `${r},${c}`;
+
+        if (visited.has(key)) continue;
+        visited.add(key);
+
         if (r < 0 || r >= BoardSize || c < 0 || c >= BoardSize) continue;
+
         const cell = board[r][c];
         if (cell.isRevealed || cell.isFlagged || cell.isMine) continue;
 
@@ -166,6 +173,7 @@ function revealEmptyCells(row, col) {
         if (cell.neighborMines === 0) {
             for (let x = -1; x <= 1; x++) {
                 for (let y = -1; y <= 1; y++) {
+                    if (x === 0 && y === 0) continue;
                     stack.push([r + x, c + y]);
                 }
             }
