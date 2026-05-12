@@ -46,6 +46,18 @@ function placeMines(firstRow, firstCol) {
     }
 }
 
+function startTimer() {
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        seconds++;
+        updateTimer();
+    }, 1000);
+}
+
+function updateTimer() {
+    if (timerDisplay) timerDisplay.textContent = seconds;
+}
+
 function calculateNumbers() {
     for (let i = 0; i < BoardSize; i++) {
         for (let j = 0; j < BoardSize; j++) {
