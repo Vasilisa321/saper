@@ -208,32 +208,39 @@ function updateCellVisual(row, col) {
 
     if (!cellDiv) return;
 
-    cellDiv.classList.toggle('revealed', cell.isRevealed);
-    cellDiv.classList.toggle('flagged', cell.isFlagged);
+    cellDiv.classList.remove('revealed', 'flagged', 'mine-revealed');
+    cellDiv.removeAttribute('data-value');
 
     if (cell.isRevealed) {
+        cellDiv.classList.add('revealed');
         cellDiv.classList.remove('flagged');
+
         if (cell.isMine) {
             cellDiv.classList.add('mine-revealed');
-            cellDiv.textContent = '';
+            cellDiv.textContent = '💣';
         } else if (cell.neighborMines > 0) {
             cellDiv.textContent = cell.neighborMines;
             cellDiv.setAttribute('data-value', cell.neighborMines);
         } else {
             cellDiv.textContent = '';
         }
+    } else if (cell.isFlagged) {
+        cellDiv.classList.add('flagged');
+        cellDiv.textContent = '🚩';
     } else {
-        cellDiv.textContent = cell.isFlagged ? '🚩' : '';
+        cellDiv.textContent = '';
     }
 }
 
-function checkWin() {
-    const safeCells = BoardSize * BoardSize - TOTAL_MINES;
 
-    if(cellsRevealed === safeCells) {
+function checkWin() {
+    const totalSafeCells = BoardSize * BoardSize - Mines;
+
+    if (cellsRevealed === totalSafeCells) {
         gameWin();
     }
 }
+
 
 function gameWin() {
     gameActive = false;
