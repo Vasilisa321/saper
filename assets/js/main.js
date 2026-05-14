@@ -16,7 +16,8 @@ const mineCounter = document.getElementById('mineCounter');
 const timerDisplay = document.getElementById('timer');
 
 function initBoard() {
-    board = Array(BoardSize).fill().map(() => Array(BoardSize).fill().map(() => ({
+    board = Array(BoardSize).fill().map(() =>
+        Array(BoardSize).fill().map(() => ({
         isMine: false,
         isRevealed: false,
         isFlagged: false,
@@ -110,6 +111,7 @@ function handleCellClick(row, col, event) {
         if (cell.isRevealed || cell.isFlagged) return;
 
         if (firstMove) {
+            startTimer();
             placeMines(row, col);
             calculateNumbers();
             firstMove = false;
@@ -128,6 +130,7 @@ function handleCellClick(row, col, event) {
             updateCellVisual(row, col);
         }
         checkWin();
+
     } else if (event.type === 'contextmenu') {
         event.preventDefault();
         if (cell.isRevealed) return;
