@@ -47,21 +47,38 @@ function placeMines(firstRow, firstCol) {
 }
 
 function updateMineCounter() {
-    const flaggedMines = board.flat().filter(cell => cell.isFlagged).length;
-    const remainingMines = Mines - flaggedMines;
-    if (mineCounter) mineCounter.textContent = remainingMines;
+   if(!mineCounter) return;
+
+   let flaggedCount = 0;
+   for (let row of board) {
+       for (let cell of row) {
+           if (cell.isFlagged) flaggedCount++;
+       }
+   }
+
+   const remaining = Mines - flaggedCount;
+   mine.Counter.textContent = remaining;
 }
 
 function startTimer() {
-    clearInterval(timerInterval);
+    if (timerInterval) stopTimer();
     timerInterval = setInterval(() => {
         seconds++;
-        updateTimer();
-    }, 1000);
+        updateTimerDisplay();
+    }, 10000);
 }
 
 function updateTimer() {
-    if (timerDisplay) timerDisplay.textContent = seconds;
+    if (timerDisplay){
+        timerDisplay.textContent = seconds;
+    }
+}
+
+function stopTimer() {
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
 }
 
 function calculateNumbers() {
