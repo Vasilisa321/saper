@@ -15,6 +15,78 @@ const gameStatus = document.getElementById('statusMessage');
 const mineCounter = document.getElementById('mineCounter');
 const timerDisplay = document.getElementById('timer');
 
+function generateEmptyField() {
+    const field = [];
+
+    for (let i = 0; i < BoardSize; i++) {
+        field[i] = [];
+        for (let j = 0; j < BoardSize; j++) {
+            field[i][j] = {
+                isMine: false,        // есть ли мина
+                isRevealed: false,    // открыта ли ячейка
+                isFlagged: false,     // стоит ли флажок
+                neighborMines: 0,     // количество мин вокруг
+                element: null         // ссылка на DOM-элемент
+            };
+        }
+    }
+
+    return field;
+}
+
+function placeMinesOnField(field, excludeRow, excludeCol, minesCount) {
+    let minesPlaced = 0;
+
+    while (minesPlaced < minesCount) {
+        const randRow = Math.floor(Math.random() * BoardSize);
+        const randCol = Math.floor(Math.random() * BoardSize);
+
+        // Не ставим мину если:
+        // 1. Там уже есть мина
+        // 2. Это ячейка, которую нужно исключить (первый клик)
+        if (!field[randRow][randCol].isMine &&
+            !(randRow === excludeRow && randCol === excludeCol)) {
+            field[randRow][randCol].isMine = true;
+            minesPlaced++;
+        }
+    }
+}
+
+function calculateNeighbors(field) {
+    for (let i = 0; i < BoardSize; i++) {
+        for (let j = 0; j < BoardSize; j++) {
+            // Пропускаем ячейки с минами
+            if (field[i][j].isMine) continue;
+
+            let count = 0;
+
+            // Проверяем всех 8 соседей
+            for (let x = -1; x <= 1; x++) {
+                for (let y = -1; y <= 1; y++) {
+                    const row = i + x;
+                    const col = j + y;
+
+                    if (row >= 0 && row < BoardSize &&
+                        col >= 0 && col < BoardSize &&
+                        field[row][col].isMine) {
+                        count++;
+                    }
+                }
+            }
+
+            field[i][j].neighborMines = count;
+        }
+    }
+}
+
+function generateCompleteField(firstRow, firstCol) {
+    const field = generateEmptyField();
+    placeMinesOnField(field, firstRow, firstCol, Mines);
+    calculateNeighbors(field);
+    return field;
+}
+
+
 function initBoard() {
     board = Array(BoardSize).fill().map(() =>
         Array(BoardSize).fill().map(() => ({
@@ -28,7 +100,6 @@ function initBoard() {
     gameActive = true;
     firstMove = true;
     seconds = 0;
-    updateTimer();
     updateMineCounter();
     if (gameStatus) gameStatus.textContent = 'Игра началась';
 }
@@ -82,13 +153,6 @@ function startTimer() {
     }, 1000);
 }
 
-function resetTimer() {
-    seconds = 0;
-    updateTimerDisplay();
-    stopTimer();
-}
-
-
 function calculateNumbers() {
     for (let i = 0; i < BoardSize; i++) {
         for (let j = 0; j < BoardSize; j++) {
@@ -108,7 +172,6 @@ function calculateNumbers() {
         }
     }
 }
-
 
 function handleCellClick(row, col, event) {
     if (!gameActive) return;
@@ -147,7 +210,6 @@ function handleCellClick(row, col, event) {
         updateMineCounter();
     }
 }
-
 
 function renderBoard() {
     if (!gameBoard) return;
@@ -212,7 +274,6 @@ function revealEmptyCells(row, col) {
     }
 }
 
-
 function updateCellVisual(row, col) {
     const cell = board[row][col];
     const cellDiv = cell.element;
@@ -243,7 +304,6 @@ function updateCellVisual(row, col) {
     }
 }
 
-
 function checkWin() {
     const totalSafeCells = BoardSize * BoardSize - Mines;
 
@@ -251,7 +311,6 @@ function checkWin() {
         gameWin();
     }
 }
-
 
 function gameWin() {
     gameActive = false;
@@ -272,8 +331,6 @@ function gameWin() {
     setTimeout(() => alert('Победа!'), 100);
 }
 
-
-
 function gameLose() {
     gameActive = false;
     stopTimer();
@@ -292,13 +349,11 @@ function gameLose() {
     setTimeout(() => alert('Вы проиграли!'), 100);
 }
 
-
 function startNewGame() {
     stopTimer();
     initBoard();
     renderBoard();
 }
-
 
 if (startButton) {
     startButton.addEventListener('click', startNewGame);
