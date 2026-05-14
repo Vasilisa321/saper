@@ -48,29 +48,21 @@ function placeMines(firstRow, firstCol) {
 }
 
 function updateMineCounter() {
-   if(!mineCounter) return;
+    if (!mineCounter) return;
 
-   let flaggedCount = 0;
-   for (let row of board) {
-       for (let cell of row) {
-           if (cell.isFlagged) flaggedCount++;
-       }
-   }
+    let flaggedCount = 0;
+    for (let row of board) {
+        for (let cell of row) {
+            if (cell.isFlagged) flaggedCount++;
+        }
+    }
 
-   const remaining = Mines - flaggedCount;
-   mine.Counter.textContent = remaining;
+    const remaining = Mines - flaggedCount;
+    mineCounter.textContent = remaining;
 }
 
-function startTimer() {
-    if (timerInterval) stopTimer();
-    timerInterval = setInterval(() => {
-        seconds++;
-        updateTimerDisplay();
-    }, 10000);
-}
-
-function updateTimer() {
-    if (timerDisplay){
+function updateTimerDisplay() {
+    if (timerDisplay) {
         timerDisplay.textContent = seconds;
     }
 }
@@ -81,6 +73,21 @@ function stopTimer() {
         timerInterval = null;
     }
 }
+
+function startTimer() {
+    if (timerInterval) stopTimer();
+    timerInterval = setInterval(() => {
+        seconds++;
+        updateTimerDisplay();
+    }, 1000);
+}
+
+function resetTimer() {
+    seconds = 0;
+    updateTimerDisplay();
+    stopTimer();
+}
+
 
 function calculateNumbers() {
     for (let i = 0; i < BoardSize; i++) {
@@ -101,6 +108,7 @@ function calculateNumbers() {
         }
     }
 }
+
 
 function handleCellClick(row, col, event) {
     if (!gameActive) return;
@@ -140,6 +148,7 @@ function handleCellClick(row, col, event) {
     }
 }
 
+
 function renderBoard() {
     if (!gameBoard) return;
 
@@ -172,11 +181,11 @@ function renderBoard() {
 }
 
 function revealEmptyCells(row, col) {
-    const stack = [[row, col]];
+    const queue = [{row: row, col: col}];
     const visited = new Set();
 
-    while (stack.length > 0) {
-        const [r, c] = stack.pop();
+    while (queue.length > 0) {
+        const {row: r, col: c} = queue.shift();
         const key = `${r},${c}`;
 
         if (visited.has(key)) continue;
@@ -185,7 +194,8 @@ function revealEmptyCells(row, col) {
         if (r < 0 || r >= BoardSize || c < 0 || c >= BoardSize) continue;
 
         const cell = board[r][c];
-        if (cell.isRevealed || cell.isFlagged || cell.isMine) continue;
+
+        if (cell.isMine || cell.isFlagged || cell.isRevealed) continue;
 
         cell.isRevealed = true;
         cellsRevealed++;
@@ -195,12 +205,13 @@ function revealEmptyCells(row, col) {
             for (let x = -1; x <= 1; x++) {
                 for (let y = -1; y <= 1; y++) {
                     if (x === 0 && y === 0) continue;
-                    stack.push([r + x, c + y]);
+                    queue.push({row: r + x, col: c + y});
                 }
             }
         }
     }
 }
+
 
 function updateCellVisual(row, col) {
     const cell = board[row][col];
