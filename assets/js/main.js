@@ -136,6 +136,7 @@ function handleCellClick(row, col, event) {
         if (cell.isRevealed) return;
         cell.isFlagged = !cell.isFlagged;
         updateCellVisual(row, col);
+        updateMineCounter();
     }
 }
 
@@ -236,6 +237,7 @@ function checkWin() {
 
 function gameWin() {
     gameActive = false;
+    stopTimer();
 
     for (let i = 0; i < BoardSize; i++) {
         for (let j = 0; j < BoardSize; j++) {
@@ -247,12 +249,16 @@ function gameWin() {
         }
     }
 
+    if (gameStatus) gameStatus.textContent = 'ПОБЕДА! 🎉';
+    updateMineCounter();
     setTimeout(() => alert('Победа!'), 100);
 }
 
 
+
 function gameLose() {
     gameActive = false;
+    stopTimer();
 
     for (let i = 0; i < BoardSize; i++) {
         for (let j = 0; j < BoardSize; j++) {
@@ -264,13 +270,17 @@ function gameLose() {
         }
     }
 
+    if (gameStatus) gameStatus.textContent = 'ПОРАЖЕНИЕ! 💥';
     setTimeout(() => alert('Вы проиграли!'), 100);
 }
 
+
 function startNewGame() {
+    stopTimer();
     initBoard();
     renderBoard();
 }
+
 
 if (startButton) {
     startButton.addEventListener('click', startNewGame);
