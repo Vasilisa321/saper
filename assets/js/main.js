@@ -5,26 +5,25 @@ let board = [];
 let firstMove = true;
 let gameActive = true;
 let cellsRevealed = 0;
-let timerInterval;
+let timerInterval = null;
 let seconds = 0;
 
 const gameBoard = document.getElementById('board');
 const resetButton = document.getElementById('restartButton');
 const startButton = document.getElementById('startButton');
 const gameStatus = document.getElementById('statusMessage');
-const mineCounter = document.getElementById('mineCounter');
-const timerDisplay = document.getElementById('timer');
 
 function generateEmptyField() {
     const field = [];
 
     for (let i = 0; i < BoardSize; i++) {
-        for(let j = 0; j < BoardSize; j++) {
+        field[i] = [];
+        for (let j = 0; j < BoardSize; j++) {
             field[i][j] = {
                 isMine: false,
                 isRevealed: false,
                 isFlagged: false,
-                neighbourMines: 0,
+                neighborMines: 0,
                 element: null
             };
         }
@@ -56,10 +55,10 @@ function calculateNumbersOnField(field) {
 
             let minesAround = 0;
 
-
             for (let deltaRow = -1; deltaRow <= 1; deltaRow++) {
                 for (let deltaCol = -1; deltaCol <= 1; deltaCol++) {
                     if (deltaRow === 0 && deltaCol === 0) continue;
+
                     const neighborRow = row + deltaRow;
                     const neighborCol = col + deltaCol;
                     const isWithinBounds = neighborRow >= 0 && neighborRow < BoardSize &&
@@ -83,42 +82,22 @@ function generateCompleteField(excludeRow, excludeCol) {
     return newField;
 }
 
-function updateMineCounter() {
-    if (!mineCounter) return;
-
-    let flaggedCount = 0;
-    for (let row of board) {
-        for (let cell of row) {
-            if (cell.isFlagged) flaggedCount++;
-        }
-    }
-
-    const remainingMines = Mines - flaggedCount;
-    mineCounter.textContent = remainingMines;
-}
-
-function updateTimerDisplay() {
-    if (timerDisplay) {
-        timerDisplay.textContent = seconds;
-    }
-}
 function stopTimer() {
     if (timerInterval) {
         clearInterval(timerInterval);
         timerInterval = null;
     }
 }
+
 function startTimer() {
     stopTimer();
     timerInterval = setInterval(() => {
         seconds++;
-        updateTimerDisplay();
     }, 1000);
 }
 
 function resetTimer() {
     seconds = 0;
-    updateTimerDisplay();
     stopTimer();
 }
 
@@ -128,7 +107,6 @@ function initBoard() {
     gameActive = true;
     firstMove = true;
     resetTimer();
-    updateMineCounter();
 
     if (gameStatus) {
         gameStatus.textContent = 'Игра Сапёр. ЛКМ — открыть, ПКМ — флажок.';
@@ -152,15 +130,17 @@ function renderBoard() {
             cellDiv.dataset.col = col;
 
             cell.element = cellDiv;
+
             cellDiv.addEventListener('click', (function(r, c) {
                 return function() {
-                    handleCellClick(r, c, { type: 'click' });
+                    handleCellClick(r, c, 'click');
                 };
             })(row, col));
+
             cellDiv.addEventListener('contextmenu', (function(r, c) {
                 return function(e) {
                     e.preventDefault();
-                    handleCellClick(r, c, e);
+                    handleCellClick(r, c, 'contextmenu');
                 };
             })(row, col));
 
@@ -169,7 +149,6 @@ function renderBoard() {
         }
     }
 }
-
 
 function updateCellVisual(row, col) {
     const cell = board[row][col];
@@ -254,10 +233,8 @@ function gameWin() {
         }
     }
 
-    updateMineCounter();
-
     if (gameStatus) {
-        gameStatus.textContent = 'ПОБЕДА! 🎉';
+        gameStatus.textContent = 'ПОБЕДА!';
     }
 
     setTimeout(() => alert('Победа!'), 100);
@@ -278,47 +255,47 @@ function gameLose() {
     }
 
     if (gameStatus) {
-        gameStatus.textContent = 'ПОРАЖЕНИЕ! 💥';
+        gameStatus.textContent = 'ПОРАЖЕНИЕ!';
     }
 
     setTimeout(() => alert('Вы проиграли!'), 100);
 }
 
-function handleCellClick(row, col, event) {
+function handleCellClick(row, col, action) {
     if (!gameActive) return;
 
     const cell = board[row][col];
 
-    if (event.type === 'click') {
+    if (action === 'click') {
         if (cell.isRevealed || cell.isFlagged) return;
 
         if (firstMove) {
             startTimer();
+
+            const oldElements = [];
+            for (let i = 0; i < BoardSize; i++) {
+                oldElements[i] = [];
+                for (let j = 0; j < BoardSize; j++) {
+                    oldElements[i][j] = board[i][j].element;
+                }
+            }
+
             board = generateCompleteField(row, col);
 
             for (let i = 0; i < BoardSize; i++) {
                 for (let j = 0; j < BoardSize; j++) {
-                    const oldCell = board[i][j];
-                    const existingElement = document.querySelector(`.cell[data-row='${i}'][data-col='${j}']`);
-                    if (existingElement) {
-                        oldCell.element = existingElement;
-                    }
+                    board[i][j].element = oldElements[i][j];
                 }
             }
 
             firstMove = false;
 
-            const updatedCell = board[row][col];
+            const currentCell = board[row][col];
 
-            if (updatedCell.isMine) {
-                gameLose();
-                return;
-            }
-
-            if (updatedCell.neighborMines === 0) {
+            if (currentCell.neighborMines === 0) {
                 revealEmptyCells(row, col);
             } else {
-                updatedCell.isRevealed = true;
+                currentCell.isRevealed = true;
                 cellsRevealed++;
                 updateCellVisual(row, col);
             }
@@ -343,14 +320,11 @@ function handleCellClick(row, col, event) {
         checkWin();
     }
 
-    else if (event.type === 'contextmenu') {
-        event.preventDefault();
-
+    else if (action === 'contextmenu') {
         if (cell.isRevealed) return;
 
         cell.isFlagged = !cell.isFlagged;
         updateCellVisual(row, col);
-        updateMineCounter();
     }
 }
 
