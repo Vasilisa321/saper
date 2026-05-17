@@ -109,7 +109,7 @@ function stopTimer() {
     }
 }
 function startTimer() {
-    stopTimer(); // останавливаем предыдущий, если был
+    stopTimer();
     timerInterval = setInterval(() => {
         seconds++;
         updateTimerDisplay();
@@ -121,3 +121,17 @@ function resetTimer() {
     updateTimerDisplay();
     stopTimer();
 }
+
+function initBoard() {
+    board = generateEmptyField();
+    cellsRevealed = 0;
+    gameActive = true;
+    firstMove = true;
+    resetTimer();
+    updateMineCounter();
+
+    if (gameStatus) {
+        gameStatus.textContent = 'Игра Сапёр. ЛКМ — открыть, ПКМ — флажок.';
+    }
+}
+
