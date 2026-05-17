@@ -283,3 +283,73 @@ function gameLose() {
 
     setTimeout(() => alert('Вы проиграли!'), 100);
 }
+
+function handleCellClick(row, col, event) {
+    if (!gameActive) return;
+
+    const cell = board[row][col];
+
+    if (event.type === 'click') {
+        if (cell.isRevealed || cell.isFlagged) return;
+
+        if (firstMove) {
+            startTimer();
+            board = generateCompleteField(row, col);
+
+            for (let i = 0; i < BoardSize; i++) {
+                for (let j = 0; j < BoardSize; j++) {
+                    const oldCell = board[i][j];
+                    const existingElement = document.querySelector(`.cell[data-row='${i}'][data-col='${j}']`);
+                    if (existingElement) {
+                        oldCell.element = existingElement;
+                    }
+                }
+            }
+
+            firstMove = false;
+
+            const updatedCell = board[row][col];
+
+            if (updatedCell.isMine) {
+                gameLose();
+                return;
+            }
+
+            if (updatedCell.neighborMines === 0) {
+                revealEmptyCells(row, col);
+            } else {
+                updatedCell.isRevealed = true;
+                cellsRevealed++;
+                updateCellVisual(row, col);
+            }
+
+            checkWin();
+            return;
+        }
+
+        if (cell.isMine) {
+            gameLose();
+            return;
+        }
+
+        if (cell.neighborMines === 0) {
+            revealEmptyCells(row, col);
+        } else {
+            cell.isRevealed = true;
+            cellsRevealed++;
+            updateCellVisual(row, col);
+        }
+
+        checkWin();
+    }
+
+    else if (event.type === 'contextmenu') {
+        event.preventDefault();
+
+        if (cell.isRevealed) return;
+
+        cell.isFlagged = !cell.isFlagged;
+        updateCellVisual(row, col);
+        updateMineCounter();
+    }
+}
