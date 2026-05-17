@@ -231,3 +231,55 @@ function revealEmptyCells(startRow, startCol) {
         }
     }
 }
+
+function checkWin() {
+    const totalSafeCells = BoardSize * BoardSize - Mines;
+
+    if (cellsRevealed === totalSafeCells) {
+        gameWin();
+    }
+}
+
+function gameWin() {
+    gameActive = false;
+    stopTimer();
+
+    for (let i = 0; i < BoardSize; i++) {
+        for (let j = 0; j < BoardSize; j++) {
+            const cell = board[i][j];
+            if (cell.isMine && !cell.isRevealed) {
+                cell.isFlagged = true;
+                updateCellVisual(i, j);
+            }
+        }
+    }
+
+    updateMineCounter();
+
+    if (gameStatus) {
+        gameStatus.textContent = 'ПОБЕДА! 🎉';
+    }
+
+    setTimeout(() => alert('Победа!'), 100);
+}
+
+function gameLose() {
+    gameActive = false;
+    stopTimer();
+
+    for (let i = 0; i < BoardSize; i++) {
+        for (let j = 0; j < BoardSize; j++) {
+            const cell = board[i][j];
+            if (cell.isMine && !cell.isRevealed) {
+                cell.isRevealed = true;
+                updateCellVisual(i, j);
+            }
+        }
+    }
+
+    if (gameStatus) {
+        gameStatus.textContent = 'ПОРАЖЕНИЕ! 💥';
+    }
+
+    setTimeout(() => alert('Вы проиграли!'), 100);
+}
