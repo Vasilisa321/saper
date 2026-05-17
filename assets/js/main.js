@@ -353,3 +353,20 @@ function handleCellClick(row, col, event) {
         updateMineCounter();
     }
 }
+
+function startNewGame() {
+    stopTimer();
+    initBoard();
+    renderBoard();
+}
+
+if (startButton) {
+    startButton.addEventListener('click', startNewGame);
+}
+
+if (resetButton) {
+    resetButton.addEventListener('click', startNewGame);
+}
+
+initBoard();
+renderBoard();
