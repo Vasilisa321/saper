@@ -135,3 +135,37 @@ function initBoard() {
     }
 }
 
+function renderBoard() {
+    if (!gameBoard) return;
+
+    gameBoard.innerHTML = '';
+    gameBoard.style.gridTemplateColumns = `repeat(${BoardSize}, 40px)`;
+    gameBoard.style.gridTemplateRows = `repeat(${BoardSize}, 40px)`;
+
+    for (let row = 0; row < BoardSize; row++) {
+        for (let col = 0; col < BoardSize; col++) {
+            const cell = board[row][col];
+            const cellDiv = document.createElement('div');
+
+            cellDiv.className = 'cell';
+            cellDiv.dataset.row = row;
+            cellDiv.dataset.col = col;
+
+            cell.element = cellDiv;
+            cellDiv.addEventListener('click', (function(r, c) {
+                return function() {
+                    handleCellClick(r, c, { type: 'click' });
+                };
+            })(row, col));
+            cellDiv.addEventListener('contextmenu', (function(r, c) {
+                return function(e) {
+                    e.preventDefault();
+                    handleCellClick(r, c, e);
+                };
+            })(row, col));
+
+            gameBoard.appendChild(cellDiv);
+            updateCellVisual(row, col);
+        }
+    }
+}
