@@ -32,3 +32,19 @@ function generateEmptyField() {
 
     return field;
 }
+
+function placeMinesOnField(field, excludeRow, excludeCol) {
+    let minesPlaced = 0;
+
+    while (minesPlaced < Mines) {
+        const randomRow = Math.floor(Math.random() * BoardSize);
+        const randomCol = Math.floor(Math.random() * BoardSize);
+        const isAlreadyMine = field[randomRow][randomCol].isMine;
+        const isExcludedCell = (randomRow === excludeRow && randomCol === excludeCol);
+
+        if (!isAlreadyMine && !isExcludedCell) {
+            field[randomRow][randomCol].isMine = true;
+            minesPlaced++;
+        }
+    }
+}
