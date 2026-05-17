@@ -48,3 +48,32 @@ function placeMinesOnField(field, excludeRow, excludeCol) {
         }
     }
 }
+
+function calculateNumbersOnField(field) {
+    // Проходим по всем ячейкам поля
+    for (let row = 0; row < BoardSize; row++) {
+        for (let col = 0; col < BoardSize; col++) {
+            // Если в ячейке мина — пропускаем (у неё не может быть цифры)
+            if (field[row][col].isMine) continue;
+
+            let minesAround = 0;
+
+
+            for (let deltaRow = -1; deltaRow <= 1; deltaRow++) {
+                for (let deltaCol = -1; deltaCol <= 1; deltaCol++) {
+                    if (deltaRow === 0 && deltaCol === 0) continue;
+                    const neighborRow = row + deltaRow;
+                    const neighborCol = col + deltaCol;
+                    const isWithinBounds = neighborRow >= 0 && neighborRow < BoardSize &&
+                        neighborCol >= 0 && neighborCol < BoardSize;
+
+                    if (isWithinBounds && field[neighborRow][neighborCol].isMine) {
+                        minesAround++;
+                    }
+                }
+            }
+
+            field[row][col].neighborMines = minesAround;
+        }
+    }
+}
