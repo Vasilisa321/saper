@@ -169,3 +169,33 @@ function renderBoard() {
         }
     }
 }
+
+
+function updateCellVisual(row, col) {
+    const cell = board[row][col];
+    const element = cell.element;
+
+    if (!element) return;
+
+    element.classList.remove('revealed', 'flagged', 'mine-revealed');
+    element.removeAttribute('data-value');
+
+    if (cell.isRevealed) {
+        element.classList.add('revealed');
+
+        if (cell.isMine) {
+            element.classList.add('mine-revealed');
+            element.textContent = '💣';
+        } else if (cell.neighborMines > 0) {
+            element.textContent = cell.neighborMines;
+            element.setAttribute('data-value', cell.neighborMines);
+        } else {
+            element.textContent = '';
+        }
+    } else if (cell.isFlagged) {
+        element.classList.add('flagged');
+        element.textContent = '🚩';
+    } else {
+        element.textContent = '';
+    }
+}
