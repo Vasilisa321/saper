@@ -199,3 +199,35 @@ function updateCellVisual(row, col) {
         element.textContent = '';
     }
 }
+
+function revealEmptyCells(startRow, startCol) {
+    const queue = [{row: startRow, col: startCol}];
+    const processed = new Set();
+
+    while (queue.length > 0) {
+        const {row: r, col: c} = queue.shift();
+        const key = `${r},${c}`;
+
+        if (processed.has(key)) continue;
+        processed.add(key);
+
+        if (r < 0 || r >= BoardSize || c < 0 || c >= BoardSize) continue;
+
+        const cell = board[r][c];
+
+        if (cell.isMine || cell.isFlagged || cell.isRevealed) continue;
+
+        cell.isRevealed = true;
+        cellsRevealed++;
+        updateCellVisual(r, c);
+
+        if (cell.neighborMines === 0) {
+            for (let dr = -1; dr <= 1; dr++) {
+                for (let dc = -1; dc <= 1; dc++) {
+                    if (dr === 0 && dc === 0) continue;
+                    queue.push({row: r + dr, col: c + dc});
+                }
+            }
+        }
+    }
+}
