@@ -50,10 +50,8 @@ function placeMinesOnField(field, excludeRow, excludeCol) {
 }
 
 function calculateNumbersOnField(field) {
-    // Проходим по всем ячейкам поля
     for (let row = 0; row < BoardSize; row++) {
         for (let col = 0; col < BoardSize; col++) {
-            // Если в ячейке мина — пропускаем (у неё не может быть цифры)
             if (field[row][col].isMine) continue;
 
             let minesAround = 0;
@@ -76,4 +74,50 @@ function calculateNumbersOnField(field) {
             field[row][col].neighborMines = minesAround;
         }
     }
+}
+
+function generateCompleteField(excludeRow, excludeCol) {
+    const newField = generateEmptyField();
+    placeMinesOnField(newField, excludeRow, excludeCol);
+    calculateNumbersOnField(newField);
+    return newField;
+}
+
+function updateMineCounter() {
+    if (!mineCounter) return;
+
+    let flaggedCount = 0;
+    for (let row of board) {
+        for (let cell of row) {
+            if (cell.isFlagged) flaggedCount++;
+        }
+    }
+
+    const remainingMines = Mines - flaggedCount;
+    mineCounter.textContent = remainingMines;
+}
+
+function updateTimerDisplay() {
+    if (timerDisplay) {
+        timerDisplay.textContent = seconds;
+    }
+}
+function stopTimer() {
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+}
+function startTimer() {
+    stopTimer(); // останавливаем предыдущий, если был
+    timerInterval = setInterval(() => {
+        seconds++;
+        updateTimerDisplay();
+    }, 1000);
+}
+
+function resetTimer() {
+    seconds = 0;
+    updateTimerDisplay();
+    stopTimer();
 }
