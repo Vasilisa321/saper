@@ -5,27 +5,22 @@ let board = [];
 let firstMove = true;
 let gameActive = true;
 let cellsRevealed = 0;
-let timerInterval = null;
-let seconds = 0;
-let playerName = '';
+
+let countdownInterval = null;
+let timeLeft = 0;
+
+let playerName ='';
 let finalScore = 0;
-let gameStartTime = 0;
 
 const gameBoard = document.getElementById('board');
+const gameStatus = document.getElementById('statusMessage');
+
+const playerNameInput = document.getElementById('playerName');
 const resetButton = document.getElementById('restartButton');
 const startButton = document.getElementById('startButton');
-const gameStatus = document.getElementById('statusMessage');
-const startScreen = document.getElementById('startScreen');
-const gameScreen = document.getElementById('gameScreen');
-const endScreen = document.getElementById('endScreen');
-const playerNameInput = document.getElementById('playerName');
-const startGameBtn = document.getElementById('startGameBtn');
-const newGameBtn = document.getElementById('newGameBtn');
+
 const timerDisplay = document.getElementById('timerDisplay');
-const scoreDisplay = document.getElementById('scoreDisplay');
-const endPlayerName = document.getElementById('endPlayerName');
-const endScore = document.getElementById('endScore');
-const endTitle = document.getElementById('endTitle');
+
 
 function generateEmptyField() {
     const field = [];
@@ -356,8 +351,7 @@ if (resetButton) {
     resetButton.addEventListener('click', startNewGame);
 }
 
-let countdownInterval = null;
-let timeLeft = 0;
+
 
 function startCountdownTimer() {
     stopCountdownTimer();
@@ -396,5 +390,30 @@ function updateTimerDisplay() {
     }
 }
 
+function initStartScreen() {
+    showStartScreen();
+
+    if (playerNameInput) {
+        playerNameInput.addEventListener('input', function () {
+            playerName = this.value.trim();
+            startGameBtn.disabled = playerName === '';
+        });
+    }
+
+    if (startGameBtn) {
+        startGameBtn.addEventListener('click', function () {
+            if (playerName !== '') {
+                showGameScreen();
+                startNewGame();
+            }
+        });
+    }
+
+    if (newGameBtn) {
+        newGameBtn.addEventListener('click', startGameFromEnd);
+    }
+}
+
 initBoard();
+initStartScreen();
 renderBoard();
