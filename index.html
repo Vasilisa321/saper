@@ -6,15 +6,55 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-<div class="game-container">
-    <h1>САПЁР</h1>
-    <div class="game-count">
-        <button class="start" id="startButton">Старт</button>
-        <button class="restart" id="restartButton">Новая игра</button>
+<div class="game-container" id="gameContainer">
+    <div id="startScreen" class="screen start-screen">
+        <h1>САПЁР</h1>
+        <div class="input-group">
+            <label for="playerName">Ваше имя:</label>
+            <input type="text" id="playerName" placeholder="Введите имя" maxlength="20">
+        </div>
+        <button id="startGameBtn" class="start-game-btn" disabled>Начать игру</button>
     </div>
-    <div class="board" id="board"></div>
-    <div class="gameStatus" id="statusMessage">Игра Сапёр. ЛКМ — открыть, ПКМ — флажок.</div>
+
+    <div id="gameScreen" class="screen game-screen" style="display: none;">
+        <h1>САПЁР</h1>
+
+        <div class="game-stats">
+            <div class="stat-block">
+                <div class="stat-label">Таймер</div>
+                <div class="stat-value" id="timerDisplay">00:00</div>
+            </div>
+            <div class="stat-block">
+                <div class="stat-label">Баллы</div>
+                <div class="stat-value" id="scoreDisplay">0</div>
+            </div>
+        </div>
+
+        <div class="board" id="board"></div>
+
+        <div class="game-guide">
+            <div class="guide-title">📖 Руководство по игре</div>
+            <div class="guide-content">
+                <div>ЛКМ — открыть клетку</div>
+                <div>ПКМ — поставить/снять флажок</div>
+                <div>Цифра — сколько мин рядом</div>
+                <div>Откройте все безопасные клетки</div>
+            </div>
+        </div>
+
+        <div class="gameStatus" id="statusMessage">Игра началась.</div>
+    </div>
+
+    <div id="endScreen" class="screen end-screen" style="display: none;">
+        <div class="end-content">
+            <h2 id="endTitle">Игра окончена</h2>
+            <div class="end-result">
+                <div class="result-player" id="endPlayerName"></div>
+                <div class="result-score" id="endScore"></div>
+            </div>
+            <button id="newGameBtn" class="new-game-btn">Новая игра</button>
+        </div>
+    </div>
 </div>
-<script src="assets/js/main.js"></script>
 </body>
 </html>
