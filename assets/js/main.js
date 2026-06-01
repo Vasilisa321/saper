@@ -7,11 +7,25 @@ let gameActive = true;
 let cellsRevealed = 0;
 let timerInterval = null;
 let seconds = 0;
+let playerName = '';
+let finalScore = 0;
+let gameStartTime = 0;
 
 const gameBoard = document.getElementById('board');
 const resetButton = document.getElementById('restartButton');
 const startButton = document.getElementById('startButton');
 const gameStatus = document.getElementById('statusMessage');
+const startScreen = document.getElementById('startScreen');
+const gameScreen = document.getElementById('gameScreen');
+const endScreen = document.getElementById('endScreen');
+const playerNameInput = document.getElementById('playerName');
+const startGameBtn = document.getElementById('startGameBtn');
+const newGameBtn = document.getElementById('newGameBtn');
+const timerDisplay = document.getElementById('timerDisplay');
+const scoreDisplay = document.getElementById('scoreDisplay');
+const endPlayerName = document.getElementById('endPlayerName');
+const endScore = document.getElementById('endScore');
+const endTitle = document.getElementById('endTitle');
 
 function generateEmptyField() {
     const field = [];
@@ -341,6 +355,8 @@ if (startButton) {
 if (resetButton) {
     resetButton.addEventListener('click', startNewGame);
 }
+
+
 
 initBoard();
 renderBoard();
