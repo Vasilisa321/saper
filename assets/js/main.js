@@ -356,7 +356,45 @@ if (resetButton) {
     resetButton.addEventListener('click', startNewGame);
 }
 
+let countdownInterval = null;
+let timeLeft = 0;
 
+function startCountdownTimer() {
+    stopCountdownTimer();
+    timeLeft = 180;
+    updateTimerDisplay();
+
+    countdownInterval = setInterval(() => {
+        if (!gameActive) return;
+
+        if (timeLeft > 0) {
+            timeLeft--;
+            updateTimerDisplay();
+            updateScoreDisplay();
+
+            if (timeLeft === 0) {
+                gameLoseByTime();
+            }
+        } else {
+            stopCountdownTimer();
+        }
+    }, 1000);
+}
+
+function stopCountdownTimer() {
+    if (countdownInterval) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+    }
+}
+
+function updateTimerDisplay() {
+    if (timerDisplay) {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+}
 
 initBoard();
 renderBoard();
