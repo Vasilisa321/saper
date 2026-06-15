@@ -2,59 +2,77 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Сапёр</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сапёр - Minesweeper</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-<div class="game-container" id="gameContainer">
-    <div id="startScreen" class="screen start-screen">
-        <h1>САПЁР</h1>
-        <div class="input-group">
-            <label for="playerName">Ваше имя:</label>
-            <input type="text" id="playerName" placeholder="Введите имя" maxlength="20">
+<div class="game-wrapper" id="gameWrapper">
+    <div class="screen screen-start active" id="startScreen">
+        <div class="screen-content">
+            <h1 class="game-title">САПЁР</h1>
+            <div class="input-group">
+                <label for="playerName">Введите ваше имя:</label>
+                <input type="text" id="playerName" class="name-input" placeholder="Игрок" maxlength="20">
+            </div>
+            <button class="btn btn-start" id="startGameBtn" disabled>▶ Начать игру</button>
+            <div class="game-rules-preview">
+                <p>Правила:</p>
+                <p>ЛКМ — открыть клетку</p>
+                <p>ПКМ — поставить/убрать флажок</p>
+                <p>Откройте все безопасные клетки</p>
+            </div>
         </div>
-        <button id="startGameBtn" class="start-game-btn" disabled>Начать игру</button>
     </div>
 
-    <div id="gameScreen" class="screen game-screen" style="display: none;">
-        <h1>САПЁР</h1>
-
-        <div class="game-stats">
-            <div class="stat-block">
-                <div class="stat-label">Таймер</div>
-                <div class="stat-value" id="timerDisplay">00:00</div>
+    <div class="screen screen-game" id="gameScreen">
+        <div class="game-header">
+            <div class="player-info">
+                <span class="player-name-label">Игрок:</span>
+                <span id="gamePlayerName" class="player-name-value">---</span>
             </div>
-            <div class="stat-block">
-                <div class="stat-label">Баллы</div>
-                <div class="stat-value" id="scoreDisplay">0</div>
+            <div class="timer-block">
+                <span class="timer-label">Таймер:</span>
+                <span id="timerDisplay" class="timer-value">00:00</span>
             </div>
-        </div>
-
-        <div class="board" id="board"></div>
-
-        <div class="game-guide">
-            <div class="guide-title">📖 Руководство по игре</div>
-            <div class="guide-content">
-                <div>ЛКМ — открыть клетку</div>
-                <div>ПКМ — поставить/снять флажок</div>
-                <div>Цифра — сколько мин рядом</div>
-                <div>Откройте все безопасные клетки</div>
+            <div class="score-block">
+                <span class="score-label">Баллы:</span>
+                <span id="scoreValue" class="score-value">0</span>
             </div>
         </div>
 
-        <div class="gameStatus" id="statusMessage">Игра началась.</div>
+        <div class="game-board-container">
+            <div class="board" id="board"></div>
+        </div>
+
+        <div class="game-footer">
+            <div class="instructions">
+                <strong>Руководство по игре:</strong>
+                <div class="instruction-text">
+                    ЛКМ — открыть клетку &nbsp;|&nbsp;
+                    🚩 ПКМ — флажок  &nbsp;|&nbsp;
+                    Цифра = мины вокруг &nbsp;|&nbsp;
+                    Пустая клетка открывает соседей
+                </div>
+            </div>
+            <button class="btn btn-new-game" id="newGameFromGameBtn">Новая игра</button>
+        </div>
     </div>
 
-    <div id="endScreen" class="screen end-screen" style="display: none;">
-        <div class="end-content">
-            <h2 id="endTitle">Игра окончена</h2>
-            <div class="end-result">
-                <div class="result-player" id="endPlayerName"></div>
-                <div class="result-score" id="endScore"></div>
+    <div class="screen screen-end" id="endScreen">
+        <div class="screen-content">
+            <div class="result-icon" id="resultIcon"></div>
+            <h2 id="resultTitle" class="result-title">Игра окончена</h2>
+            <div class="result-stats">
+                <p>Игрок: <span id="finalPlayerName">---</span></p>
+                <p>Заработано баллов: <span id="finalScore">0</span></p>
+                <p>Оставшееся время: <span id="finalTime">00:00</span></p>
             </div>
-            <button id="newGameBtn" class="new-game-btn">Новая игра</button>
+            <button class="btn btn-play-again" id="playAgainBtn">Играть снова</button>
         </div>
     </div>
 </div>
+
+<script src="assets/js/main.js"></script>
 </body>
 </html>
