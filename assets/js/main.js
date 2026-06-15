@@ -1,5 +1,5 @@
 const BOARD_SIZE = 10;
-const TOTAL_MINES = 1;
+const TOTAL_MINES = 5;
 const INITIAL_TIME_SEC = 300;
 
 let gameBoard = [];
